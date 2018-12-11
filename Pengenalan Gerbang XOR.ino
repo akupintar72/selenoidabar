@@ -4,25 +4,21 @@
  * Network Configuration - customized per network 
  ******************************************************************/
 
-const int PatternCount = 4;
-const int InputNodes = 2;
-const int HiddenNodes = 2;
+const int PatternCount = 4; //Karena input 2, maka ada 4 pola
+const int InputNodes = 2; //Jumlah Input
+const int HiddenNodes = 2; //Jumlah Hidden Layer
 const int HiddenNodes1=2;
-const int OutputNodes = 1;
+const int OutputNodes = 1; //Jumlah Output
 const int OutputNodes1 = 1;
-const float LearningRate = 0.3;
+const float LearningRate = 0.3; //Kecepatan Learning
 const float Momentum = 0.9;
-const float InitialWeightMax = 0.5;
-const float Success = 0.0004;
+const float InitialWeightMax = 0.5; 
+const float Success = 0.0004; //Total error maximal
+bool ex1,ex2,ex3,ex4,ex5,ex6,ex7,ex8;//Inisialiasi
 
-const byte Input[PatternCount][InputNodes] = {
-{0,0},
-{0,1},
-{1,0},
-{1,1}
-}; 
+const byte Input[PatternCount][InputNodes]; 
 
-const byte Target[PatternCount][OutputNodes] = {
+const byte Target[PatternCount][OutputNodes] = {//Gerbang XOR
 {0},
 {1},
 {1},
@@ -30,7 +26,7 @@ const byte Target[PatternCount][OutputNodes] = {
 
 };
 
-const byte Target1[PatternCount][OutputNodes] = {
+const byte Target1[PatternCount][OutputNodes] = {//JK-FF
 {0},
 {0},
 {1},
@@ -65,14 +61,15 @@ float OutputDelta1[OutputNodes];
 float ChangeHiddenWeights[InputNodes+1][HiddenNodes];
 float ChangeHiddenWeights1[InputNodes+1][HiddenNodes1];
 float ChangeOutputWeights[HiddenNodes+1][OutputNodes];
-float ChangeOutputWeights1[HiddenNodes1+1][OutputNodes];
+
 
 void setup(){
-  pinMode(4, INPUT_PULLUP);
-  pinMode(5, INPUT_PULLUP);
+  pinMode(4, INPUT_PULLUP); //Setiap switch dibuat menjadi input pull up
+  pinMode(5, INPUT_PULLUP); //karena tersambung dengan ground
   pinMode(2, INPUT_PULLUP);
-  pinMode(3, INPUT_PULLUP);
-  Serial.begin(9600);
+  pinMode(3, INPUT_PULLUP); 
+  pinMode(13, OUTPUT);      //untuk led disetting sebagai output
+  Serial.begin(9600);       //serial dengan baudrate 9600
   randomSeed(analogRead(3));
   ReportEvery1000 = 1;
   for( p = 0 ; p < PatternCount ; p++ ) {    
@@ -81,6 +78,49 @@ void setup(){
 }  
 
 void loop (){
+
+  digitalWrite(13, LOW);
+
+  ex1=0; ex3=0; ex5=0;  ex7=0;
+  ex4=0; ex2=0; ex6=0;  ex8=0;
+  
+  Serial.println("Masukan Input");
+  delay(5000);
+  ex1=digitalRead(4); ex2=digitalRead(5);
+  Serial.print("X1: "); Serial.println(ex1);
+  Serial.print("X2: "); Serial.println(ex2);
+  
+  Serial.println();
+  
+  delay(5000);
+  ex3=digitalRead(4); ex4=digitalRead(5);
+  Serial.print("X3 :"); Serial.println(ex3);
+  Serial.print("X4 :"); Serial.println(ex4);
+  
+  Serial.println();
+  
+  delay(5000);
+  ex5=digitalRead(4); ex6=digitalRead(5);
+  Serial.print("X5 :"); Serial.println(ex5);
+  Serial.print("X6 :"); Serial.println(ex6);
+  
+  Serial.println();
+
+  delay(5000);
+  ex7=digitalRead(4); ex8=digitalRead(5); 
+  Serial.print("X7 :"); Serial.println(ex7);
+  Serial.print("X8 :"); Serial.println(ex8);
+
+  Serial.println();
+  
+  
+  const byte Input[PatternCount][InputNodes]
+  {
+    {ex1,ex2},
+    {ex3,ex4},
+    {ex5,ex6},
+    {ex7,ex8}
+  };
 
 bool port1,port2;
 port1=0;
@@ -232,11 +272,11 @@ Serial.println(port2);
 
       if (TrainingCycle==1)
       {
-        ReportEvery1000 = 999;
+        ReportEvery1000 = 49;
       }
       else
       {
-        ReportEvery1000 = 1000;
+        ReportEvery1000 = 50;
       }
     }    
 
@@ -258,20 +298,17 @@ Serial.println(port2);
 
   Serial.println ();  
   Serial.println ();
-  Serial.println ("Training Set Solved! ");
+  Serial.println ("Training Selesai");
   Serial.println ("--------"); 
   Serial.println ();
   Serial.println ();  
   ReportEvery1000 = 1;
 
-  
-  gerbangxor();
-
-  Serial.println("Pengenalan Selesai");
-  Serial.println(" ");
+  //gerbangxor();
   delay(3000);
 
  }
+ 
   //Pengenalan JK FLIP FLOP//
  if(port1==0&&port2==0)
  {
@@ -405,11 +442,11 @@ Serial.println(port2);
 
       if (TrainingCycle==1)
       {
-        ReportEvery1000 = 999;
+        ReportEvery1000 = 49;
       }
       else
       {
-        ReportEvery1000 = 1000;
+        ReportEvery1000 = 50;
       }
     }    
 
@@ -431,16 +468,13 @@ Serial.println(port2);
 
   Serial.println ();  
   Serial.println ();
-  Serial.println ("Training Set Solved! ");
+  Serial.println ("Training Selesai ");
   Serial.println ("--------"); 
   Serial.println ();
   Serial.println ();  
   ReportEvery1000 = 1;
 
-  jkff();
-
-  Serial.println("Pengenalan Selesai");
-  Serial.println(" ");
+  //jkff();
   delay(3000);
  }
 
@@ -451,7 +485,14 @@ Serial.println(port2);
 void toTerminal()
 {
   
-
+const byte Input[PatternCount][InputNodes]
+  {
+    {ex1,ex2},
+    {ex3,ex4},
+    {ex5,ex6},
+    {ex7,ex8}
+  };
+  
   for( p = 0 ; p < PatternCount ; p++ ) { 
     Serial.println(); 
     Serial.print ("  Training Pattern: ");
@@ -502,6 +543,13 @@ void toTerminal()
 
 void toTerminal1()
 {
+  const byte Input[PatternCount][InputNodes]
+  {
+    {ex1,ex2},
+    {ex3,ex4},
+    {ex5,ex6},
+    {ex7,ex8}
+  };
   
 
   for( p = 0 ; p < PatternCount ; p++ ) { 
@@ -552,9 +600,13 @@ void toTerminal1()
 
 }
 
+/*****************************************
+ * Void gerbangxor() dan jkff(), digunakan untuk melakukan
+ * komputasi tetapi dengan bobot terbaru (nilai error telah
+ * tercapai
+ */
 
-
-void gerbangxor()
+/*void gerbangxor()
 {
   bool ex1,ex2,ex3,ex4,ex5,ex6,ex7,ex8;
   ex1=0; ex3=0; ex5=0;  ex7=0;
@@ -586,6 +638,8 @@ void gerbangxor()
   ex7=digitalRead(4); ex8=digitalRead(5); 
   Serial.print("X7 :"); Serial.println(ex7);
   Serial.print("X8 :"); Serial.println(ex8);
+
+  Serial.println();
   
   
   const byte masukan[PatternCount][InputNodes]
@@ -620,11 +674,6 @@ void gerbangxor()
       Hidden[i] = 1.0/(1.0 + exp(-Accum)) ;
     }
 
-
-/******************************************************************
-* Compute output layer activations and calculate errors
-******************************************************************/
-
     for( i = 0 ; i < OutputNodes ; i++ ) {    
       Accum = OutputWeights[HiddenNodes][i] ;
       for( j = 0 ; j < HiddenNodes ; j++ ) {
@@ -640,8 +689,9 @@ void gerbangxor()
         
    }
   
-    }
+    } */
 
+/*Fungsi ini bisa digunakan untuk melakukan komputasi baru dengan bobot baru
 void jkff()
 {
     bool ex1,ex2,ex3,ex4,ex5,ex6,ex7,ex8;
@@ -708,9 +758,7 @@ void jkff()
     }
 
 
-/******************************************************************
-* Compute output layer activations and calculate errors
-******************************************************************/
+
 
     for( i = 0 ; i < OutputNodes ; i++ ) {    
       Accum = OutputWeights[HiddenNodes][i] ;
@@ -727,5 +775,4 @@ void jkff()
         
    }
   
-    }
-
+    } */
