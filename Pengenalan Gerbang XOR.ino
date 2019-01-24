@@ -16,22 +16,29 @@ const float InitialWeightMax = 0.5;
 const float Success = 0.0004; //Total error maximal
 bool ex1,ex2,ex3,ex4,ex5,ex6,ex7,ex8;//Inisialiasi
 
-const byte Input[PatternCount][InputNodes]; 
+const byte Input[PatternCount][InputNodes];
+
+
 
 const byte Target[PatternCount][OutputNodes] = {//Gerbang XOR
 {0},
 {1},
 {1},
 {0}
-
 };
 
-const byte Target1[PatternCount][OutputNodes] = {//JK-FF
-{0},
+const byte Awal[PatternCount][InputNodes]={//State Awal JK-FF
+{1},
+{1},
+{1},
+{1}
+}; 
+
+const byte Target1[PatternCount][OutputNodes] = {//State Akhir JK-FF
+{1},
 {0},
 {1},
 {0}
-
 };
 /******************************************************************
  * End Network Configuration
@@ -272,11 +279,11 @@ Serial.println(port2);
 
       if (TrainingCycle==1)
       {
-        ReportEvery1000 = 49;
+        ReportEvery1000 = 24;
       }
       else
       {
-        ReportEvery1000 = 50;
+        ReportEvery1000 = 25;
       }
     }    
 
@@ -442,11 +449,11 @@ Serial.println(port2);
 
       if (TrainingCycle==1)
       {
-        ReportEvery1000 = 49;
+        ReportEvery1000 = 24;
       }
       else
       {
-        ReportEvery1000 = 50;
+        ReportEvery1000 = 25;
       }
     }    
 
@@ -555,7 +562,11 @@ void toTerminal1()
   for( p = 0 ; p < PatternCount ; p++ ) { 
     Serial.println(); 
     Serial.print ("  Training Pattern: ");
-    Serial.println (p);      
+    Serial.println (p);
+    Serial.print(" StateAwal ");
+    for( i = 0 ; i < OutputNodes1 ; i++ ) {
+      Serial.print(Awal[p][i]);
+      Serial.print(" ");}      
     Serial.print ("  Input ");
     for( i = 0 ; i < InputNodes ; i++ ) {
       Serial.print (Input[p][i], DEC);
@@ -594,6 +605,11 @@ void toTerminal1()
     for( i = 0 ; i < OutputNodes1 ; i++ ) {       
       Serial.print (Output[i], 5);
       Serial.print (" ");
+      Serial.print (" State Akhir ");
+      if(Output[0]>0.5)
+        Serial.print("1");
+      else
+        Serial.print("0");
     }
   }
 
